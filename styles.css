@@ -1,0 +1,156 @@
+/* General styles */
+body {
+    background-color: #f4f8f8;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: #7db48d;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #003300;
+}
+/* Sections */
+section {
+    padding: 25px;
+    margin: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 5px #ccc;
+}
+
+/* Sections */
+#container {
+    
+    border: 2px solid #be3131;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    font-style: oblique;
+    gap: 1rem;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+}
+
+form input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #7db48d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #5e8f6d;
+}
+
+/* Pets gallery */
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: beige;
+    margin: 3rem;
+
+}
+
+.oso img, .ardilla img, .tortu img {
+    border-radius: 10px;
+   width: 300px;
+   height: 200px;
+ 
+}
+
+.oso article {
+    padding: 10px;
+    font-size: 1.1rem;
+    text-align: justify;
+    font-family: cursive;
+    width: 300px;
+}
+
+.oso, .ardilla, .tortu {
+    display: flex;
+    gap: 4rem;
+}
+
+.ardilla article {
+    padding: 10px;
+    font-size: 1.1rem;
+    text-align: justify;
+    font-family: cursive;
+    width: 300px;
+}
+
+.tortu article {
+    padding: 10px;
+    font-size: 1.1rem;
+    text-align: justify;
+    font-family: cursive;
+       width: 300px;
+}
+       
+/* Back link */
+.back {
+    display: block;
+    text-align: center;
+    margin: 20px;
+    font-weight: bold;
+}
+
+.back:hover {
+    color: darkgreen;
+}
+
+/* Estilo para el pie de página */
+footer {
+    background-color: #5e8f6d;
+    color: white;
+    align-items: center;
+    padding: 20px;
+    font-size: 1rem;
+}
+
+footer p {
+    text-align: center;
+}   
+
