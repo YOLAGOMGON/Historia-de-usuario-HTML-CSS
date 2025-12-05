@@ -14,27 +14,38 @@ header {
     text-align: center;
 }
 
-nav ul {
+.Nav{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.Nav ul{
+    margin-top: 3rem;
     list-style: none;
     padding: 0;
-    margin-top: 10px;
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+
 }
 
-nav ul li {
-    display: inline-block;
-    margin: 0 15px;
-}
-
-nav ul li a {
+.Nav a{
+    box-shadow: 0 0 3px #000000;
+    display: flex;
+    height: 50px;
+    width: 150px;
+    background-color: #fdfdfd;
     text-decoration: none;
-    color: white;
+    color: #000000;
     font-weight: bold;
+    font-size: 25px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
 }
 
-nav ul li a:hover {
-    color: #003300;
-}
-/* Sections */
 section {
     padding: 25px;
     margin: 20px;
@@ -53,7 +64,6 @@ section {
     font-style: oblique;
     gap: 1rem;
 }
-
 /* Form */
 form {
     display: flex;
@@ -84,7 +94,7 @@ form button:hover {
 /* Pets gallery */
 .container {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     flex-direction: column;
     flex-wrap: wrap;
     gap: 20px;
@@ -94,31 +104,41 @@ form button:hover {
 }
 
 .oso img, .ardilla img, .tortu img {
-    border-radius: 10px;
+   border-radius: 10px;
    width: 300px;
    height: 200px;
+   transform: scale(1.06);
+   object-fit: cover; /* Ajusta las imágenes al mismo tamaño */
+   margin: 0px auto;
+   border-radius: 10px;
+   transition: transform 0.3s ease-in-out;
+   box-shadow: 0 0 10px #000000;
  
 }
 
-.oso article {
+article p {
+    position: relative;
     padding: 10px;
     font-size: 1.1rem;
     text-align: justify;
     font-family: cursive;
     width: 300px;
+    left: -480px;
 }
 
 .oso, .ardilla, .tortu {
     display: flex;
     gap: 4rem;
+    
 }
 
-.ardilla article {
+.ardilla artic {
     padding: 10px;
     font-size: 1.1rem;
     text-align: justify;
     font-family: cursive;
     width: 300px;
+
 }
 
 .tortu article {
@@ -126,7 +146,7 @@ form button:hover {
     font-size: 1.1rem;
     text-align: justify;
     font-family: cursive;
-       width: 300px;
+    width: 300px;
 }
        
 /* Back link */
@@ -153,4 +173,39 @@ footer {
 footer p {
     text-align: center;
 }   
+
+
+.slides {
+    box-shadow: 0 0 5px #000000;
+    border-radius: 10px;
+    display: flex;
+    width: 100%; /* Tamaño del banner */
+    justify-content: center;
+    margin: auto;
+    display: flex;
+    animation: slide 12s infinite;
+    flex-wrap: wrap;
+    gap: 34px;
+
+}
+
+.slides img {
+  width: 300px; /* Mismo ancho que .slider */
+  height: 300px; /* Mismo alto que .slider */
+  object-fit: cover; /* Ajusta las imágenes al mismo tamaño */
+  margin: 10px auto;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 10px #000000;
+}
+
+.slides img:hover{
+    transform: scale(1.06);
+    
+}
+
+#about{
+    text-align: center;
+}
+
 
