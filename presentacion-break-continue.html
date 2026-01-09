@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break y Continue en JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.5em;
+            margin-bottom: 40px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .break-highlight {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .continue-highlight {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .comparison-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 3px solid;
+        }
+
+        .box.break-box {
+            border-color: #dc3545;
+        }
+
+        .box.continue-box {
+            border-color: #17a2b8;
+        }
+
+        .box h4 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .box.break-box h4 {
+            color: #dc3545;
+        }
+
+        .box.continue-box h4 {
+            color: #17a2b8;
+        }
+
+        .analogy {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 1.3em;
+        }
+
+        .diagram {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 3px solid #667eea;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .key-point {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 1.2em;
+            border-left: 4px solid #ffc107;
+        }
+
+        .table-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .table-comparison th,
+        .table-comparison td {
+            padding: 15px;
+            text-align: left;
+            border: 2px solid #ddd;
+        }
+
+        .table-comparison th {
+            background: #667eea;
+            color: white;
+        }
+
+        .table-comparison tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        ul {
+            margin-left: 30px;
+            font-size: 1.3em;
+            line-height: 2;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .output {
+            background: #1e1e1e;
+            color: #4ec9b0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+
+        .big-number {
+            font-size: 4em;
+            color: #667eea;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+    </div>
+
+    <div class="presentation-container">
+        <!-- SLIDE 1: Título -->
+        <div class="slide active">
+            <h1>🔄 Control de Flujo</h1>
+            <h2>Break y Continue en JavaScript</h2>
+            <p class="subtitle">Aprende a controlar tus bucles de manera eficiente</p>
+            <div style="text-align: center; margin-top: 50px;">
+                <div class="big-number">10 min</div>
+                <p style="font-size: 1.5em; color: #666; margin-top: 20px;">Exposición Express</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Introducción -->
+        <div class="slide">
+            <h2>🎯 ¿Qué aprenderemos?</h2>
+            <ul style="margin-top: 40px;">
+                <li>✅ Qué es <span class="break-highlight">BREAK</span> y cuándo usarlo</li>
+                <li>✅ Qué es <span class="continue-highlight">CONTINUE</span> y cuándo usarlo</li>
+                <li>✅ Diferencias entre ambos</li>
+                <li>✅ Casos prácticos de uso</li>
+            </ul>
+            <div class="analogy" style="margin-top: 40px;">
+                <strong>💡 Analogía rápida:</strong><br>
+                BREAK = Botón STOP (detiene todo)<br>
+                CONTINUE = Saltar un escalón (omites uno, sigues)
+            </div>
+        </div>
+
+        <!-- SLIDE 3: BREAK - Definición -->
+        <div class="slide">
+            <h2>🛑 BREAK</h2>
+            <div class="box break-box">
+                <h4>Sale COMPLETAMENTE del bucle</h4>
+                <p style="font-size: 1.3em; margin-top: 15px;">
+                    Cuando JavaScript encuentra <span class="break-highlight">break</span>, 
+                    el bucle se <strong>detiene inmediatamente</strong> y no ejecuta más iteraciones.
+                </p>
+            </div>
+            <div class="diagram">
+                <div style="font-size: 1.5em;">
+                    [Iteración 1] → [Iteración 2] → [Iteración 3] → 
+                    <span class="break-highlight">BREAK</span> → 🛑 FIN
+                </div>
+            </div>
+            <div class="key-point">
+                <strong>Uso:</strong> Cuando ya encontraste lo que buscabas y no necesitas seguir.
+            </div>
+        </div>
+
+        <!-- SLIDE 4: BREAK - Ejemplo -->
+        <div class="slide">
+            <h3>Ejemplo: Buscar el número 5</h3>
+            <div class="code-block">
+const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+for (let i = 0; i < numeros.length; i++) {
+    console.log(`Revisando: ${numeros[i]}`);
+    
+    if (numeros[i] === 5) {
+        console.log("¡Encontrado! Deteniendo...");
+        <span class="break-highlight">break;</span> // Sale del bucle
+    }
+}
+            </div>
+            <div class="output">
+Revisando: 1
+Revisando: 2
+Revisando: 3
+Revisando: 4
+Revisando: 5
+¡Encontrado! Deteniendo...
+            </div>
+            <div class="key-point">
+                ⚠️ <strong>Importante:</strong> Los números 6, 7, 8, 9, 10 nunca se revisan porque el bucle se detuvo.
+            </div>
+        </div>
+
+        <!-- SLIDE 5: CONTINUE - Definición -->
+        <div class="slide">
+            <h2>⏭️ CONTINUE</h2>
+            <div class="box continue-box">
+                <h4>Salta la iteración ACTUAL</h4>
+                <p style="font-size: 1.3em; margin-top: 15px;">
+                    Cuando JavaScript encuentra <span class="continue-highlight">continue</span>, 
+                    <strong>salta</strong> la iteración actual pero <strong>continúa</strong> con la siguiente.
+                </p>
+            </div>
+            <div class="diagram">
+                <div style="font-size: 1.5em;">
+                    [Iteración 1] ✅ → [Iteración 2] ⏭️ → [Iteración 3] ✅ → [Iteración 4] ✅ → ...
+                </div>
+            </div>
+            <div class="key-point">
+                <strong>Uso:</strong> Cuando quieres filtrar elementos y procesar solo algunos.
+            </div>
+        </div>
+
+        <!-- SLIDE 6: CONTINUE - Ejemplo -->
+        <div class="slide">
+            <h3>Ejemplo: Solo números impares</h3>
+            <div class="code-block">
+for (let i = 1; i <= 10; i++) {
+    if (i % 2 === 0) {
+        <span class="continue-highlight">continue;</span> // Salta números pares
+    }
+    console.log(`Número impar: ${i}`);
+}
+            </div>
+            <div class="output">
+Número impar: 1
+Número impar: 3
+Número impar: 5
+Número impar: 7
+Número impar: 9
+            </div>
+            <div class="key-point">
+                ✅ <strong>Nota:</strong> Salta los pares (2, 4, 6, 8, 10) pero el bucle continúa hasta el final.
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Comparación Visual -->
+        <div class="slide">
+            <h2>⚖️ Comparación Visual</h2>
+            <p style="text-align: center; font-size: 1.3em; margin-bottom: 30px;">
+                Mismo ejemplo: procesar números del 1 al 10
+            </p>
+            <div class="comparison-box">
+                <div class="box break-box">
+                    <h4>🛑 Con BREAK</h4>
+                    <p style="margin-top: 15px; font-size: 1.2em;">
+                        Se <strong>detiene</strong> cuando encuentra número > 5
+                    </p>
+                    <div class="output" style="margin-top: 15px; font-size: 0.9em;">
+Procesando: 1
+Procesando: 2
+Procesando: 3
+Procesando: 4
+Procesando: 5
+🛑 DETIENE (no procesa 6-10)
+                    </div>
+                </div>
+                <div class="box continue-box">
+                    <h4>⏭️ Con CONTINUE</h4>
+                    <p style="margin-top: 15px; font-size: 1.2em;">
+                        <strong>Salta</strong> números > 5, pero continúa
+                    </p>
+                    <div class="output" style="margin-top: 15px; font-size: 0.9em;">
+Procesando: 1
+Procesando: 2
+Procesando: 3
+Procesando: 4
+Procesando: 5
+⏭️ Salta: 6, 7, 8, 9, 10
+Termina el bucle
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Comparación en Código -->
+        <div class="slide">
+            <h2>📊 Comparación en Código</h2>
+            <div class="code-block" style="font-size: 16px;">
+const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// VERSIÓN 1: Con BREAK
+for (let num of numeros) {
+    if (num > 5) {
+        <span class="break-highlight">break;</span> // Se DETIENE aquí
+    }
+    console.log(num);
+}
+// Resultado: 1, 2, 3, 4, 5
+
+// VERSIÓN 2: Con CONTINUE
+for (let num of numeros) {
+    if (num > 5) {
+        <span class="continue-highlight">continue;</span> // Salta este
+    }
+    console.log(num);
+}
+// Resultado: 1, 2, 3, 4, 5 (pero termina el bucle)
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Tabla Comparativa -->
+        <div class="slide">
+            <h2>📋 Tabla Comparativa</h2>
+            <table class="table-comparison">
+                <tr>
+                    <th>Característica</th>
+                    <th>🛑 BREAK</th>
+                    <th>⏭️ CONTINUE</th>
+                </tr>
+                <tr>
+                    <td><strong>Acción</strong></td>
+                    <td>Sale completamente</td>
+                    <td>Salta iteración actual</td>
+                </tr>
+                <tr>
+                    <td><strong>Iteraciones restantes</strong></td>
+                    <td>❌ No se ejecutan</td>
+                    <td>✅ Se ejecutan</td>
+                </tr>
+                <tr>
+                    <td><strong>Uso común</strong></td>
+                    <td>Buscar un elemento</td>
+                    <td>Filtrar elementos</td>
+                </tr>
+                <tr>
+                    <td><strong>Analogía</strong></td>
+                    <td>Botón STOP</td>
+                    <td>Saltar escalón</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- SLIDE 10: Cuándo Usar Cada Uno -->
+        <div class="slide">
+            <h2>🎯 ¿Cuándo Usar Cada Uno?</h2>
+            <div class="comparison-box">
+                <div class="box break-box">
+                    <h4>🛑 Usa BREAK cuando:</h4>
+                    <ul style="margin-top: 20px;">
+                        <li>✅ Buscas un elemento</li>
+                        <li>✅ Ya encontraste lo que necesitas</li>
+                        <li>✅ Quieres detener el procesamiento</li>
+                    </ul>
+                    <div class="key-point" style="margin-top: 20px;">
+                        <strong>Ejemplo:</strong> Buscar usuario por ID
+                    </div>
+                </div>
+                <div class="box continue-box">
+                    <h4>⏭️ Usa CONTINUE cuando:</h4>
+                    <ul style="margin-top: 20px;">
+                        <li>✅ Quieres filtrar elementos</li>
+                        <li>✅ Necesitas saltar algunos pero continuar</li>
+                        <li>✅ Procesar solo elementos que cumplan condición</li>
+                    </ul>
+                    <div class="key-point" style="margin-top: 20px;">
+                        <strong>Ejemplo:</strong> Validar emails, saltar inválidos
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Reglas Importantes -->
+        <div class="slide">
+            <h2>⚠️ Reglas Importantes</h2>
+            <div style="font-size: 1.3em; line-height: 2;">
+                <div class="key-point" style="background: #d4edda; border-color: #28a745;">
+                    <strong>✅ Funcionan en:</strong>
+                    <ul>
+                        <li>Bucles: for, while, do-while</li>
+                        <li>Break también funciona en switch</li>
+                    </ul>
+                </div>
+                <div class="key-point" style="background: #f8d7da; border-color: #dc3545;">
+                    <strong>❌ NO funcionan en:</strong>
+                    <ul>
+                        <li>Funciones normales (usa <code>return</code> en su lugar)</li>
+                    </ul>
+                </div>
+                <div class="key-point" style="background: #fff3cd; border-color: #ffc107;">
+                    <strong>⚠️ En bucles anidados:</strong>
+                    <ul>
+                        <li>Afectan solo al bucle más cercano</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Resumen y Cierre -->
+        <div class="slide">
+            <h2>📝 Resumen</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 2em; margin: 30px 0;">
+                    <div class="break-highlight" style="display: inline-block; padding: 15px 30px; margin: 10px;">
+                        BREAK = Detener
+                    </div>
+                    <div class="continue-highlight" style="display: inline-block; padding: 15px 30px; margin: 10px;">
+                        CONTINUE = Saltar
+                    </div>
+                </div>
+                <div class="key-point" style="max-width: 800px; margin: 40px auto; font-size: 1.5em;">
+                    <strong>Regla de oro:</strong><br>
+                    ¿Buscar algo? → <span class="break-highlight">BREAK</span><br>
+                    ¿Filtrar elementos? → <span class="continue-highlight">CONTINUE</span>
+                </div>
+                <div style="font-size: 2em; color: #667eea; margin-top: 50px;">
+                    ¡Gracias! 🚀
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">◀ Anterior</button>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Siguiente ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Actualizar botones
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializar
+        showSlide(0);
+    </script>
+</body>
+</html>
+
