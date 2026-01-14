@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!-- 
+    ============================================
+    ARCHIVO: tasksort.html
+    ============================================
+    Esta es la página PRINCIPAL de la aplicación TaskSort.
+    Aquí el usuario puede crear, ver, filtrar y gestionar sus tareas.
+    
+    Esta página solo es accesible si el usuario tiene una sesión activa.
+    ux-ui.js verifica esto y redirige a index.html si no hay sesión.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Nuestro archivo CSS personalizado -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Bootstrap: Framework CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons: Librería de iconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- 
+        Scripts JavaScript (orden importante):
+        1. ux-ui.js: Verifica sesión y maneja logout
+        2. script.js: Maneja toda la lógica de tareas (CRUD, filtros, etc.)
+    -->
+    <script src="ux-ui.js" defer></script>
+    <script src="script.js" defer></script>
+    <title>TaskSort</title>
+</head>
+<body>
+
+    <!-- 
+        ============================================
+        BARRA DE NAVEGACIÓN (Header)
+        ============================================
+        - bg-nav: Clase personalizada para el fondo del navbar
+        - d-flex: Display flexbox
+        - flex-column: En móviles, los elementos se apilan verticalmente
+        - flex-md-row: En tablets+, los elementos se alinean horizontalmente
+        - align-items-center: Centra verticalmente
+        - justify-content-md-between: En tablets+, distribuye espacio entre elementos
+        - p-4: Padding de 4 unidades
+        - mb-4: Margin bottom de 4 unidades
+        - gap-3: Espacio entre elementos flex
+    -->
+    <div class="bg-nav d-flex flex-column flex-md-row align-items-center justify-content-md-between p-4 mb-4 gap-3">
+
+    <!-- Logo de la aplicación -->
+    <div class="logo-wrapper">
+    <a href="#">
+        <!-- 
+            SVG: Gráfico vectorial (escalable sin perder calidad)
+            - Representa un logo tipo "lista con checkmark"
+            - currentColor usa el color del texto actual
+        -->
+        <svg width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <!-- Rectángulos que representan líneas de texto (lista) -->
+            <rect x="6" y="10" width="10" height="4" rx="2" fill="currentColor"/>
+            <rect x="6" y="18" width="16" height="4" rx="2" fill="currentColor"/>
+            <rect x="6" y="26" width="8" height="4" rx="2" fill="currentColor"/>
+            <!-- Línea de checkmark (✓) -->
+            <path d="M24 26L29 31L36 18" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+    </a>
+    </div>
+
+        <!-- 
+            ============================================
+            MENÚ DE NAVEGACIÓN
+            ============================================
+            Contiene los botones principales de la aplicación
+        -->
+        <nav class="d-flex gap-2 flex-wrap justify-content-center">
+
+            <!-- 
+                ============================================
+                MENÚ DE FILTROS POR PRIORIDAD
+                ============================================
+                - Filterlist: Contenedor con posición relativa para el menú desplegable
+            -->
+            <div class="Filterlist">
+
+                <!-- Botón que muestra/oculta el menú de filtros -->
+                <button id="Priority-filter" class="btn btn-add">
+                    <!-- Icono de embudo (funnel) -->
+                    <i class="bi bi-funnel icon-size me-2"></i>
+                    <!-- Texto que muestra el filtro activo (cambia dinámicamente con JavaScript) -->
+                    <span id="selectedFilter">Filter</span>
+                    <!-- Icono de flecha hacia abajo -->
+                    <i class="bi bi-chevron-down ml-auto text-xs ms-2"></i>
+                </button>
+                
+                <!-- Menú desplegable de filtros (oculto por defecto) -->
+                <ul id="FilterMenu">
+                    <!-- 
+                        Cada <li> es una opción de filtro
+                        - onclick="sort('High')": Al hacer clic, llama a la función sort() con el parámetro
+                        - Esta función está definida en script.js
+                    -->
+                    <li class="Filter-item" onclick="sort('High')">
+                        <i class="bi bi-circle-fill filter-high"></i> High Priority
+                    </li>
+                    <li class="Filter-item" onclick="sort('Medium')">
+                        <i class="bi bi-circle-fill filter-medium"></i> Medium Priority
+                    </li>
+                    <li class="Filter-item" onclick="sort('Low')">
+                        <i class="bi bi-circle-fill filter-low "></i> Low Priority
+                    </li>
+                    <!-- Separador visual -->
+                    <hr class="my-1 border-gray-100">
+                    <!-- Opción para mostrar todas las tareas -->
+                    <li class="Filter-item font-bold filter-all" onclick="sort('All')">
+                        <i class="bi bi-grid-fill"></i> Show All
+                    </li>
+                </ul>
+
+            </div>
+            
+            <!-- Botón para agregar nueva tarea -->
+            <button id="Add-Task" class="btn btn-add">
+                <i class="bi bi-plus-lg me-2"></i>Add note
+            </button>
+            
+            <!-- Botón para mostrar/ocultar todas las tareas -->
+            <button id="toggleTasks" class="btn btn-add">
+                <!-- Icono del ojo (cambia dinámicamente con JavaScript) -->
+                <i class="bi bi-eye me-2" id="eyeIcon"></i>
+                <!-- Texto que cambia entre "Show tasks" y "Hide tasks" -->
+                <span id="Text-visibility">Show tasks</span>
+            </button>
+            
+            <!-- Botón para cerrar sesión -->
+            <button id="Log-out" class="btn btn-out btn-add">
+                <i class="bi bi-box-arrow-right me-2 icon-bold"></i>Log out
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- 
+        ============================================
+        MODAL (VENTANA EMERGENTE) PARA CREAR TAREAS
+        ============================================
+        - id="Modal-Wrapper": Contenedor del modal
+        - display: none por defecto (oculto)
+        - JavaScript lo muestra cuando se hace clic en "Add note"
+        - position: fixed - Se queda fijo en la pantalla
+        - z-index: 2000 - Aparece por encima de todo
+        - background: rgba(0,0,0,0.5) - Fondo semitransparente oscuro
+    -->
+    <div id="Modal-Wrapper">
+        <div class="container d-flex justify-content-center align-items-center">
+            <div class="col-11 col-md-8 col-lg-5">
+                <div class="card shadow border-0 p-3 ">
+
+                    <div class="card-body fade-in">
+
+                        <h2 class="text-center card-title mb-2 fw-bold">Create your task</h2>
+                        
+                        <!-- Área para mensajes de error (se llena dinámicamente con JavaScript) -->
+                        <div id="Incorrect" class="mb-2 text-center"></div>
+
+                        <!-- 
+                            Formulario para crear tareas
+                            - id="formTask": ID para referenciar desde JavaScript
+                            - onsubmit="addTask(event)": Cuando se envía, llama a la función addTask()
+                            - return false: Previene el comportamiento por defecto del formulario
+                        -->
+                        <form id="formTask" class="" onsubmit="addTask(event) ;return false">
+
+                            <!-- Campo de Título -->
+                            <label for="title">Title</label>
+                            <input class="form-control mb-3" type="text" id="title" placeholder="Homework" required>
+
+                            <!-- Campo de Descripción -->
+                            <label for="description">Description</label>
+                            <!-- 
+                                <textarea>: Campo de texto multilínea (para textos largos)
+                                - id="description": JavaScript obtendrá este valor
+                                - required: Campo obligatorio
+                            -->
+                            <textarea class="form-control mb-3" type="text" id="description" placeholder="Write details here..." required></textarea>
+
+                            <!-- Selector de Prioridad -->
+                            <select class="form-select mb-4" id="priority" required>
+                                <!-- 
+                                    <select>: Menú desplegable
+                                    - Cada <option> es una opción disponible
+                                    - value="" es la opción por defecto (vacía, para forzar selección)
+                                -->
+                                <option value="">Select priority</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+
+                            <!-- Botones de acción del formulario -->
+                            <div class="Task">
+                                <!-- Botón de guardar (type="submit" envía el formulario) -->
+                                <button class="btn btn-add" type="submit">Save</button>
+                                <!-- 
+                                    Botón de cancelar
+                                    - type="button": NO envía el formulario
+                                    - onclick="closeModal()": Llama a la función que cierra el modal
+                                -->
+                                <button class="btn btn-add" type="button" onclick="closeModal()">Cancel</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 
+        ============================================
+        SECCIÓN PRINCIPAL: LISTA DE TAREAS
+        ============================================
+        Aquí es donde se muestran todas las tarjetas de tareas
+        - Inicialmente está vacío (no hay contenido dentro de <article>)
+        - JavaScript (script.js) crea dinámicamente las tarjetas aquí usando taskUI()
+    -->
+    <section class="p-3">
+        <h2 class="mb-5">List of tasks</h2>
+        <!-- 
+            id="Taskcontainer": Contenedor donde se renderizan las tareas
+            - class="row": Clase de Bootstrap para crear filas (grid system)
+            - g-4: Gap de 4 unidades entre elementos (espaciado)
+            - JavaScript añadirá aquí las tarjetas de tareas dinámicamente
+        -->
+        <article id="Taskcontainer" class="row g-4 "></article>
+    </section>
+
+</body>
+</html>

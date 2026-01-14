@@ -1,0 +1,506 @@
+/**
+ * ============================================
+ * ARCHIVO: style.css
+ * ============================================
+ * Este archivo contiene todos los estilos CSS personalizados de la aplicación TaskSort.
+ * 
+ * CSS (Cascading Style Sheets) es el lenguaje que define cómo se ven los elementos HTML.
+ * 
+ * ESTRUCTURA CSS:
+ * selector {
+ *     propiedad: valor;
+ * }
+ */
+
+/**
+ * ============================================
+ * VARIABLES CSS (Custom Properties)
+ * ============================================
+ * :root es un selector especial que representa el elemento raíz (html)
+ * Aquí definimos variables CSS que podemos reutilizar en todo el archivo
+ * 
+ * SINTAXIS:
+ * --nombre-variable: valor;
+ * 
+ * VENTAJAS:
+ * - Cambiar un color en un solo lugar afecta a todos los lugares donde se use
+ * - Facilita el mantenimiento y la personalización del tema
+ */
+:root{
+    /* Colores principales */
+    --Header-color: #fff;      /* Color blanco para headers y tarjetas */
+    --Bg-main: #f4f4f4;        /* Color gris claro para el fondo principal */
+    --Int-color: #c0b283;      /* Color dorado/beige para elementos interactivos */
+    --Black-color: #373737;    /* Color gris oscuro para textos */
+    
+    /* Colores para prioridades ALTA */
+    --High-bg: #ffebee;        /* Fondo rosa claro */
+    --High-text: #d32f2f;      /* Texto rojo */
+    
+    /* Colores para prioridades MEDIA */
+    --Medium-bg: #fff3e0;      /* Fondo naranja claro */
+    --Medium-text: #f57c00;    /* Texto naranja */
+    
+    /* Colores para prioridades BAJA */
+    --Low-bg: #e8f5e9;         /* Fondo verde claro */
+    --Low-text: #388e3c;       /* Texto verde */
+}
+
+/**
+ * ============================================
+ * ESTILOS DEL BODY (Cuerpo de la página)
+ * ============================================
+ * Estos estilos se aplican a TODO el contenido de la página
+ */
+body{
+    /* margin: 0 - Elimina los márgenes por defecto del navegador */
+    margin: 0;
+    
+    /* min-height: 100vh - Hace que el body tenga al menos 100% de la altura de la ventana */
+    /* vh = Viewport Height (altura de la ventana visible) */
+    min-height: 100vh;
+    
+    /* background-color: var(--Bg-main) - Usa la variable CSS definida en :root */
+    /* !important: Fuerza este estilo (sobrescribe otros estilos) */
+    background-color: var(--Bg-main) !important;
+    
+    /* color: Color del texto por defecto */
+    color: var(--Black-color);
+    
+    /* font-family: Define la fuente tipográfica */
+    font-family: 'Courier New', Courier, monospace, !important;
+}
+
+/**
+ * ============================================
+ * CLASE: .hidden-form
+ * ============================================
+ * Oculta completamente un elemento
+ * Se usa para mostrar/ocultar el formulario de login o registro
+ */
+.hidden-form {
+    /* display: none - Hace que el elemento no se muestre en pantalla */
+    display: none !important;
+}
+
+/**
+ * ============================================
+ * CLASE: .fade-in
+ * ============================================
+ * Aplica una animación de desvanecimiento cuando aparece un elemento
+ */
+.fade-in {
+    /* animation: nombre duracion funcion-timing */
+    animation: fadeIn 0.4s ease-in;
+    /* fadeIn: Nombre de la animación (definida abajo con @keyframes) */
+    /* 0.4s: Duración de 0.4 segundos */
+    /* ease-in: La animación empieza lenta y termina rápido */
+}
+
+/**
+ * ============================================
+ * ANIMACIÓN: @keyframes fadeIn
+ * ============================================
+ * Define los pasos de una animación CSS
+ * 
+ * SINTAXIS:
+ * @keyframes nombre-animacion {
+ *     from { /* estado inicial / }
+ *     to { /* estado final / }
+ * }
+ * 
+ * También se puede usar porcentajes:
+ * @keyframes nombre {
+ *     0% { /* inicio / }
+ *     50% { /* mitad / }
+ *     100% { /* final / }
+ * }
+ */
+@keyframes fadeIn {
+    /* Estado inicial: invisible y desplazado 10px hacia abajo */
+    from { 
+        opacity: 0;                    /* Transparencia 0 = invisible */
+        transform: translateY(10px);   /* Desplaza 10px hacia abajo */
+    }
+    /* Estado final: completamente visible y en su posición normal */
+    to { 
+        opacity: 1;                    /* Transparencia 1 = completamente visible */
+        transform: translateY(0);      /* Sin desplazamiento (posición normal) */
+    }
+}
+
+/**
+ * ============================================
+ * CLASE: .btn-add
+ * ============================================
+ * Estilos para los botones personalizados de la aplicación
+ */
+.btn-add{
+    /* border-radius: 0 - Elimina las esquinas redondeadas */
+    border-radius: 0 !important;
+    
+    /* transition: all 0.2s ease-in-out - Hace que los cambios de estilo sean suaves */
+    /* all: Aplica a todas las propiedades CSS */
+    /* 0.2s: Duración de la transición */
+    /* ease-in-out: Empieza lento, acelera, y termina lento */
+    transition: all 0.2s ease-in-out;
+    
+    /* Eliminamos todos los bordes excepto el inferior */
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    
+    /* Tamaño de fuente */
+    font-size: 18px !important;
+}
+
+/**
+ * ============================================
+ * ESTADO HOVER: .btn-add:hover
+ * ============================================
+ * Estilos que se aplican cuando el mouse está sobre el botón
+ * 
+ * SINTAXIS:
+ * .selector:hover { }
+ */
+.btn-add:hover{
+    /* Al pasar el mouse, se muestra un borde inferior dorado */
+    border-bottom: solid 2px var(--Int-color) !important;
+    /* Y el texto cambia a color dorado */
+    color: var(--Int-color) !important;
+}
+
+/**
+ * ============================================
+ * ESTADO ACTIVO: .btn-add.active
+ * ============================================
+ * Estilos para botones que están "activados" (p. ej., filtro activo)
+ * Esta clase se agrega dinámicamente con JavaScript
+ */
+.btn-add.active{
+    /* Desplaza el botón 2px hacia abajo (efecto de "presionado") */
+    transform: translateY(2px);
+    /* Muestra el borde inferior dorado */
+    border-bottom: solid 2px var(--Int-color) !important;
+}
+
+/**
+ * ============================================
+ * CLASE: .bg-nav
+ * ============================================
+ * Fondo para la barra de navegación
+ */
+.bg-nav{
+    background-color: var(--Header-color) !important;  /* Fondo blanco */
+}
+
+/**
+ * ============================================
+ * SELECTOR: .logo-wrapper svg
+ * ============================================
+ * Selecciona elementos <svg> dentro de elementos con clase .logo-wrapper
+ * 
+ * SINTAXIS:
+ * .clase elemento - Selecciona elementos "elemento" dentro de ".clase"
+ */
+.logo-wrapper svg{
+    color: var(--Black-color);  /* Color del logo (gris oscuro) */
+}
+
+/**
+ * ============================================
+ * SELECTOR: h2
+ * ============================================
+ * Estilos para todos los títulos de nivel 2
+ */
+h2{
+    text-align: center;  /* Centra el texto horizontalmente */
+}
+
+/**
+ * ============================================
+ * CLASE: .Filterlist
+ * ============================================
+ * Contenedor para el menú de filtros
+ */
+.Filterlist{
+    /* position: relative - Permite posicionar elementos hijos de forma absoluta relativa a este */
+    position: relative;
+    
+    /* display: inline-block - Se comporta como inline pero permite width/height */
+    display: inline-block;
+}
+
+/**
+ * ============================================
+ * ID: #FilterMenu
+ * ============================================
+ * Menú desplegable de filtros
+ * 
+ * DIFERENCIA ENTRE .clase y #id:
+ * - .clase: Se puede usar múltiples veces (reutilizable)
+ * - #id: Debe ser único en toda la página (una sola vez)
+ */
+#FilterMenu {
+    /* Oculto por defecto (JavaScript lo muestra/oculta) */
+    display: none;
+    
+    /* position: absolute - Se posiciona relativo al padre (.Filterlist) */
+    position: absolute;
+    
+    /* top: 100% - Se coloca justo debajo del botón (100% de la altura del padre) */
+    top: 100%;
+    
+    /* left: 0 - Alineado al borde izquierdo del padre */
+    left: 0;
+    
+    /* Ancho fijo del menú */
+    width: 180px;
+    
+    /* Fondo blanco */
+    background: white;
+    
+    /* Borde gris claro */
+    border: 1px solid #e5e7eb;
+    
+    /* border-radius: 12px - Esquinas redondeadas */
+    border-radius: 12px;
+    
+    /* box-shadow: Sombra del elemento */
+    /* rgba(0, 0, 0, 0.1) = negro con 10% de opacidad */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* padding: 8px 0 - Espacio interno vertical (arriba/abajo) */
+    padding: 8px 0;
+    
+    /* z-index: 1000 - Capa de apilamiento (aparece por encima de otros elementos) */
+    z-index: 1000;
+    
+    /* margin-top: 5px - Pequeño espacio entre el botón y el menú */
+    margin-top: 5px;
+}
+
+/**
+ * ============================================
+ * CLASE: .Filter-item
+ * ============================================
+ * Estilos para cada opción del menú de filtros
+ */
+.Filter-item {
+    /* padding: 10px 16px - Espacio interno (arriba/abajo: 10px, izquierda/derecha: 16px) */
+    padding: 10px 16px;
+    
+    /* cursor: pointer - Cambia el cursor a "mano" al pasar el mouse */
+    cursor: pointer;
+    
+    color: var(--Black-color);
+    
+    /* display: flex - Usa flexbox para alinear elementos internos */
+    display: flex;
+    
+    /* align-items: center - Centra verticalmente los elementos flex */
+    align-items: center;
+    
+    /* gap: 10px - Espacio entre elementos hijos */
+    gap: 10px;
+    
+    font-size: 16px;
+}
+
+/**
+ * ============================================
+ * COLORES DE LOS ICONOS DE FILTRO
+ * ============================================
+ * Cada prioridad tiene su color distintivo
+ */
+.filter-high { 
+    color: var(--High-text);    /* Rojo para alta prioridad */
+}
+
+.filter-medium { 
+    color: var(--Medium-text);  /* Naranja para media prioridad */
+}
+
+.filter-low { 
+    color: var(--Low-text);     /* Verde para baja prioridad */
+}
+
+/**
+ * ============================================
+ * HOVER EN "SHOW ALL"
+ * ============================================
+ */
+.filter-all:hover { 
+    /* Fondo gris muy claro al pasar el mouse */
+    background-color: #f9fafb; 
+}
+
+/**
+ * ============================================
+ * HOVER EN CUALQUIER ITEM DE FILTRO
+ * ============================================
+ */
+.Filter-item:hover {
+    /* El texto cambia a color dorado al pasar el mouse */
+    color: var(--Int-color);
+}
+
+/**
+ * ============================================
+ * ID: #Modal-Wrapper
+ * ============================================
+ * Contenedor del modal (ventana emergente) para crear tareas
+ */
+#Modal-Wrapper {
+    /* Oculto por defecto (JavaScript lo muestra) */
+    display: none;
+    
+    /* position: fixed - Se queda fijo en la pantalla (no se mueve al hacer scroll) */
+    position: fixed; 
+    
+    /* top: 0; left: 0 - Empieza desde la esquina superior izquierda */
+    top: 0; left: 0;
+    
+    /* width: 100%; height: 100% - Ocupa toda la pantalla */
+    width: 100%; height: 100%;
+    
+    /* background: rgba(0,0,0,0.5) - Fondo negro semitransparente (50% opacidad) */
+    /* Esto crea el efecto de "overlay" oscuro detrás del modal */
+    background: rgba(0,0,0,0.5); 
+    
+    /* z-index: 2000 - Aparece por encima de todo (más alto que el menú de filtros) */
+    z-index: 2000; 
+    
+    /* padding-top: 100px - Espacio arriba (para centrar el contenido verticalmente) */
+    padding-top: 100px;
+}
+
+/**
+ * ============================================
+ * ID: #description
+ * ============================================
+ * Campo de texto para la descripción de la tarea
+ */
+#description {
+    /* height: 100px - Altura fija del textarea */
+    height: 100px;
+    
+    /* resize: none - No permite que el usuario redimensione el campo */
+    resize: none;
+    
+    /* overflow-y: auto - Muestra scroll vertical si el contenido es muy largo */
+    overflow-y: auto;
+}
+
+/**
+ * ============================================
+ * CLASE: .Task
+ * ============================================
+ * Contenedor para los botones del formulario (Save y Cancel)
+ */
+.Task{
+    width: 100%;
+    
+    /* gap: 6rem - Espacio grande entre los botones */
+    gap: 6rem;
+    
+    /* Flexbox para alinear los botones */
+    display: flex;
+    justify-content: center;  /* Centra horizontalmente */
+    align-items: center;      /* Centra verticalmente */
+    flex-direction: row;      /* Los elementos se alinean en fila (horizontalmente) */
+}
+
+/**
+ * ============================================
+ * CLASE: .task-card
+ * ============================================
+ * Estilos para las tarjetas individuales de cada tarea
+ */
+.task-card{
+    /* padding: 20px - Espacio interno en todos los lados */
+    padding: 20px;
+    
+    /* Fondo blanco */
+    background-color: var(--Header-color) !important;
+    
+    /* Esquinas ligeramente redondeadas */
+    border-radius: 10px;
+    
+    /* Ocupa todo el ancho disponible */
+    width: 100%;
+    
+    /* Flexbox con dirección columna (elementos apilados verticalmente) */
+    display: flex;
+    flex-direction: column;
+    
+    /* Sombra sutil para dar profundidad */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    
+    /* 
+     * Las siguientes propiedades controlan el salto de línea de texto largo:
+     * - overflow-wrap: Permite que las palabras largas se rompan si es necesario
+     * - word-wrap: Alias de overflow-wrap (para compatibilidad)
+     * - word-break: Especifica cómo deben romperse las palabras
+     * 
+     * Esto previene que textos largos salgan de la tarjeta
+     */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    
+    /* height: 100% - Ocupa toda la altura disponible del contenedor */
+    height: 100%;
+}
+
+/**
+ * ============================================
+ * CLASE: .priority-tag
+ * ============================================
+ * Estilos base para las etiquetas de prioridad (High, Medium, Low)
+ */
+.priority-tag{
+    /* border-radius: 20px - Esquinas muy redondeadas (forma de "píldora") */
+    border-radius: 20px;
+    
+    /* font-weight: bold - Texto en negrita */
+    font-weight: bold;
+    
+    /* text-transform: uppercase - Convierte el texto a mayúsculas */
+    text-transform: uppercase;
+    
+    /* width: fit-content - El ancho se adapta al contenido */
+    width: fit-content;
+    
+    font-size: 14px;
+    
+    /* padding: 5px 10px - Espacio interno (vertical: 5px, horizontal: 10px) */
+    padding: 5px 10px;
+}
+
+/**
+ * ============================================
+ * CLASES DE PRIORIDAD
+ * ============================================
+ * Cada prioridad tiene colores diferentes
+ * Estas clases se combinan con .priority-tag
+ */
+
+/* Prioridad ALTA - Fondo rosa claro, texto rojo */
+.priority-High { 
+    background-color: var(--High-bg); 
+    color: var(--High-text); 
+}
+
+/* Prioridad MEDIA - Fondo naranja claro, texto naranja */
+.priority-Medium { 
+    background-color: var(--Medium-bg); 
+    color: var(--Medium-text); 
+}
+
+/* Prioridad BAJA - Fondo verde claro, texto verde */
+.priority-Low { 
+    background-color: var(--Low-bg); 
+    color: var(--Low-text); 
+}
+
