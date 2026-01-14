@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>addEventListener - Exposición 5 Minutos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.5em;
+            margin-bottom: 40px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .event-highlight {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .function-highlight {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .demo-area {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .demo-btn:active {
+            transform: scale(0.95);
+        }
+
+        .demo-result {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-point {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 1.2em;
+            border-left: 4px solid #ffc107;
+        }
+
+        .analogy {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 1.3em;
+        }
+
+        .table-events {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .table-events th,
+        .table-events td {
+            padding: 15px;
+            text-align: left;
+            border: 2px solid #ddd;
+        }
+
+        .table-events th {
+            background: #667eea;
+            color: white;
+        }
+
+        .table-events tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 3px solid #667eea;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .big-number {
+            font-size: 4em;
+            color: #667eea;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .input-demo {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin: 10px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .slide {
+                width: 95%;
+                padding: 25px 20px;
+                margin: 20px 0;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            h3 {
+                font-size: 1.5em;
+            }
+
+            .code-block {
+                font-size: 14px;
+                padding: 15px;
+            }
+
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">8</span>
+    </div>
+
+    <div class="presentation-container">
+        <!-- SLIDE 1: Título -->
+        <div class="slide active">
+            <h1>🎧 addEventListener</h1>
+            <h2>Escuchando Eventos en JavaScript</h2>
+            <p class="subtitle">Aprende a hacer tu página interactiva</p>
+            <div style="text-align: center; margin-top: 50px;">
+                <div class="big-number">5 min</div>
+                <p style="font-size: 1.5em; color: #666; margin-top: 20px;">Exposición Rápida</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: ¿Qué es? -->
+        <div class="slide">
+            <h2>🎯 ¿Qué es addEventListener?</h2>
+            <div class="analogy">
+                <strong>💡 Analogía:</strong><br>
+                Es como poner un <strong>"oído"</strong> a un elemento HTML para que "escuche" cuando algo sucede (clic, tecla, movimiento) y reaccione ejecutando código.
+            </div>
+            <div class="key-point" style="margin-top: 30px;">
+                <strong>Definición:</strong> Método de JavaScript que permite escuchar eventos en elementos HTML y ejecutar código cuando esos eventos ocurren.
+            </div>
+            <div class="code-block" style="margin-top: 30px;">
+<span class="function-highlight">elemento</span>.<span class="event-highlight">addEventListener</span>('<span class="event-highlight">tipo-de-evento</span>', <span class="function-highlight">función</span>);
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Sintaxis -->
+        <div class="slide">
+            <h2>📝 Sintaxis Básica</h2>
+            <div class="code-block">
+// 1. Obtener el elemento
+const boton = document.getElementById('miBoton');
+
+// 2. Agregar el "escuchador"
+boton.addEventListener('click', function() {
+    alert('¡Hiciste clic!');
+});
+            </div>
+            <div class="key-point">
+                <strong>Componentes:</strong><br>
+                1. <span class="event-highlight">Elemento</span> - El elemento HTML (botón, div, input, etc.)<br>
+                2. <span class="event-highlight">Tipo de evento</span> - Qué evento escuchar ('click', 'keydown', etc.)<br>
+                3. <span class="event-highlight">Función</span> - El código que se ejecuta cuando ocurre el evento
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Ejemplo 1 - Click -->
+        <div class="slide">
+            <h3>Ejemplo 1: Click en Botón</h3>
+            <div class="code-block">
+const boton = document.getElementById('cambiarColor');
+const caja = document.getElementById('miCaja');
+
+boton.addEventListener('click', function() {
+    caja.style.backgroundColor = 'blue';
+    caja.textContent = '¡Color cambiado!';
+});
+            </div>
+            <div class="demo-area">
+                <div id="demo-caja" style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px auto; max-width: 300px; border: 3px solid #667eea;">
+                    Caja de demostración
+                </div>
+                <button class="demo-btn" id="demo-btn-1">Cambiar Color</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Ejemplo 2 - Input -->
+        <div class="slide">
+            <h3>Ejemplo 2: Escribir en Input</h3>
+            <div class="code-block">
+const input = document.getElementById('miInput');
+const resultado = document.getElementById('resultado');
+
+input.addEventListener('input', function() {
+    resultado.textContent = 'Escribiste: ' + input.value;
+});
+            </div>
+            <div class="demo-area">
+                <input type="text" class="input-demo" id="demo-input" placeholder="Escribe algo aquí...">
+                <div class="demo-result" id="demo-resultado">
+                    Esperando que escribas...
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Tipos de Eventos -->
+        <div class="slide">
+            <h2>🎮 Tipos de Eventos Comunes</h2>
+            <table class="table-events">
+                <tr>
+                    <th>Evento</th>
+                    <th>Cuándo se Dispara</th>
+                </tr>
+                <tr>
+                    <td><code>'click'</code></td>
+                    <td>Cuando haces clic en el elemento</td>
+                </tr>
+                <tr>
+                    <td><code>'mouseenter'</code></td>
+                    <td>Cuando el mouse entra al elemento</td>
+                </tr>
+                <tr>
+                    <td><code>'mouseleave'</code></td>
+                    <td>Cuando el mouse sale del elemento</td>
+                </tr>
+                <tr>
+                    <td><code>'keydown'</code></td>
+                    <td>Cuando presionas una tecla</td>
+                </tr>
+                <tr>
+                    <td><code>'input'</code></td>
+                    <td>Cuando escribes en un input</td>
+                </tr>
+                <tr>
+                    <td><code>'submit'</code></td>
+                    <td>Cuando envías un formulario</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- SLIDE 7: Ejemplo 3 - Múltiples Eventos -->
+        <div class="slide">
+            <h3>Ejemplo 3: Múltiples Eventos</h3>
+            <div class="code-block">
+const caja = document.getElementById('miCaja');
+
+// Evento 1: Mouse entra
+caja.addEventListener('mouseenter', function() {
+    caja.style.backgroundColor = 'green';
+    caja.textContent = 'Mouse dentro';
+});
+
+// Evento 2: Mouse sale
+caja.addEventListener('mouseleave', function() {
+    caja.style.backgroundColor = 'red';
+    caja.textContent = 'Mouse fuera';
+});
+            </div>
+            <div class="demo-area">
+                <div id="demo-caja-2" style="background: #f8f9fa; padding: 40px; border-radius: 10px; margin: 20px auto; max-width: 300px; border: 3px solid #667eea; cursor: pointer; transition: all 0.3s;">
+                    Pasa el mouse por aquí
+                </div>
+            </div>
+            <div class="key-point">
+                ✅ <strong>Ventaja:</strong> Puedes agregar múltiples eventos al mismo elemento
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Resumen -->
+        <div class="slide">
+            <h2>📝 Resumen</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <div class="key-point" style="max-width: 800px; margin: 20px auto; font-size: 1.3em;">
+                    <strong>addEventListener</strong> = Método para "escuchar" eventos<br><br>
+                    <strong>Sintaxis:</strong> elemento.addEventListener('evento', función)<br><br>
+                    <strong>Ventaja:</strong> Puedes agregar múltiples escuchadores<br><br>
+                    <strong>Uso común:</strong> Botones, formularios, inputs, etc.
+                </div>
+                <div style="font-size: 2em; color: #667eea; margin-top: 50px;">
+                    ¡Gracias! 🚀
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">◀ Anterior</button>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Siguiente ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+
+            // Inicializar demos cuando se muestre la slide correspondiente
+            if (currentSlide === 3) {
+                initDemo1();
+            } else if (currentSlide === 4) {
+                initDemo2();
+            } else if (currentSlide === 6) {
+                initDemo3();
+            }
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Demo 1: Cambiar color
+        function initDemo1() {
+            const btn = document.getElementById('demo-btn-1');
+            const caja = document.getElementById('demo-caja');
+            
+            if (btn && !btn.hasAttribute('data-initialized')) {
+                btn.setAttribute('data-initialized', 'true');
+                btn.addEventListener('click', function() {
+                    const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    caja.style.backgroundColor = randomColor;
+                    caja.textContent = '¡Color cambiado!';
+                    caja.style.color = 'white';
+                });
+            }
+        }
+
+        // Demo 2: Input
+        function initDemo2() {
+            const input = document.getElementById('demo-input');
+            const resultado = document.getElementById('demo-resultado');
+            
+            if (input && !input.hasAttribute('data-initialized')) {
+                input.setAttribute('data-initialized', 'true');
+                input.addEventListener('input', function() {
+                    if (input.value.trim() === '') {
+                        resultado.textContent = 'Esperando que escribas...';
+                    } else {
+                        resultado.textContent = 'Escribiste: ' + input.value;
+                    }
+                });
+            }
+        }
+
+        // Demo 3: Mouse enter/leave
+        function initDemo3() {
+            const caja = document.getElementById('demo-caja-2');
+            
+            if (caja && !caja.hasAttribute('data-initialized')) {
+                caja.setAttribute('data-initialized', 'true');
+                caja.addEventListener('mouseenter', function() {
+                    caja.style.backgroundColor = '#28a745';
+                    caja.textContent = 'Mouse dentro ✅';
+                    caja.style.color = 'white';
+                });
+                
+                caja.addEventListener('mouseleave', function() {
+                    caja.style.backgroundColor = '#dc3545';
+                    caja.textContent = 'Mouse fuera ❌';
+                    caja.style.color = 'white';
+                });
+            }
+        }
+
+        // Inicializar
+        showSlide(0);
+    </script>
+</body>
+</html>
+
